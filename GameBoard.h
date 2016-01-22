@@ -239,8 +239,8 @@ public:
                         }
                         else if (temp < boardSize && values[temp][i] == values[temp - 1][i]) {
                             values[temp][i] = values[temp][i] * 2;
-                            if (values[row][i] > max)
-                                max = values[row][i];
+                            if (values[temp][i] > max)
+                                max = values[temp][i];
                             score += values[temp][i] * 2;
                             //temporary status to insure titlting one step each round
                             values[temp - 1][i] = -1;
@@ -286,7 +286,7 @@ public:
                             temp--;
                             valid = true;
                         }
-                        if (temp >= 0 && values[i][temp] == -1) {
+                        if (temp >= 0 && values[temp][i] == -1) {
                             values[temp][i] = values[temp + 1][i];
                             values[temp + 1][i] = 0;
                             valid = true;
