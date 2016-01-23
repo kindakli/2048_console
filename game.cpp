@@ -1,9 +1,35 @@
 #include <iostream>
 #include "GameBoard.h"
 
+#include <unistd.h>  
+#include <termios.h>  
+
 using namespace std;
 
-void main()
+char getch(){
+    
+    char buf=0;
+    struct termios old={0};
+    fflush(stdout);
+    if(tcgetattr(0, &old)<0)
+        perror("tcsetattr()");
+    old.c_lflag&=~ICANON;
+    old.c_lflag&=~ECHO;
+    old.c_cc[VMIN]=1;
+    old.c_cc[VTIME]=0;
+    if(tcsetattr(0, TCSANOW, &old)<0)
+        perror("tcsetattr ICANON");
+    if(read(0,&buf,1)<0)
+        perror("read()");
+    old.c_lflag|=ICANON;
+    old.c_lflag|=ECHO;
+    if(tcsetattr(0, TCSADRAIN, &old)<0)
+        perror ("tcsetattr ~ICANON");
+    printf("%c\n",buf);
+    return buf;
+ }
+
+int main()
 {
     int boardSize = 0;
     cout << "enter the board size (-1 for default)" << endl;
@@ -14,21 +40,15 @@ void main()
     GameBoard game(boardSize);
 
     while (true) {
-        if (game.isValidMove()) {
-            if (!game.generateRandomNumber()) {
-                cout << "Game over..." << endl;
-                game.displayScore();
-                break;
-            }
-        }
 
-        cout << game.displayMatrix();
+        cout << game.displayMatrix2();
         cout << game.displayScore();
 
-        char direction = 0;
+        char direction ;
         //enter the direction
-        cout << "Please choose your next move (w= up - d= right - a= left - s= down)" << endl;
-        cin >> direction;
+        cout << "Please choose your next move (w= up - d= right - a= left - s= down, q to quit)" << endl;
+        //cin >> getchar();
+        direction = getch();
 
         switch (direction) // decide the move based on the ASCII code of the letter
         {
@@ -49,18 +69,35 @@ void main()
             game.moveDown();
             break;
 
+        case 81:
+        case 113:
+            return 0;
+            break;
+
         default: //others
             cout << "invalid direction, please try again" << endl;
             continue;
         }
-        if (!game.isValidMove()) {
+    
+
+        if (game.isValidMove()) {
+            game.generateRandomNumber();
+        }   else {
             cout << "invalid move, please try again" << endl;
             continue;
         }
-        else if (game.win()) {
+        if (game.win()) {
             cout << "Congratulation!" << endl;
-            game.displayScore();
+            cout << game.displayScore();
+            break;
+        }
+        if(!game.hasValidMove())
+        {           
+            cout <<game.displayMatrix2();
+            cout <<game.displayScore();
+            cout << "Game over..." << endl;
             break;
         }
     }
+    return 0;
 }

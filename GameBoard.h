@@ -1,3 +1,5 @@
+#include <sstream>
+#include <iomanip>
 #include <vector>
 #include <time.h>
 #include <string>
@@ -39,6 +41,10 @@ public:
         valid = true;
         max = 0;
         score = 0;
+        for (int i = 0; i < boardSize; i++)
+            for (int j = 0; j < boardSize; j++)
+                values[i][j] = 0;
+        generateRandomNumber();
     }
 
     GameBoard(int boardSize)
@@ -53,6 +59,7 @@ public:
         for (int i = 0; i < boardSize; i++)
             for (int j = 0; j < boardSize; j++)
                 values[i][j] = 0;
+        generateRandomNumber();
     }
 
     bool generateRandomNumber()
@@ -89,7 +96,7 @@ public:
             column_tried = 0;
             std::fill(temp_column.begin(), temp_column.end(), false);
         } while (row_tried < boardSize);
-        return false; // unable to add => lose the game
+        return false; // unable to generate
     }
 
     bool moveRight()
@@ -209,7 +216,8 @@ public:
             int row = boardSize - 1;
             while (row > 0) {
                 //if the cell is not empty
-                if (values[row - 1][i] > 0) {
+                if (values[row - 1][i] > 0) 
+                {
                     if (values[row][i] == values[row - 1][i]) {
                         values[row][i] = values[row][i] * 2;
                         if (values[row][i] > max)
@@ -323,6 +331,28 @@ public:
         result += '\n';
         return result;
     }
+    string displayMatrix2()
+    {
+        string result("2048:\n");
+        string liner("+");
+        for (int i = 0; i < boardSize; i++) {
+            liner+= "------+";
+        }
+        liner+='\n';
+        for (int i = 0; i < boardSize; i++) {
+            string rowString("");
+            for (int j = 0; j < boardSize; j++) {
+                std::ostringstream row;
+                row << " " << std::setw(4) << std::setfill(' ') << values[i][j] << " |";
+                rowString += row.str();
+            }
+            result += liner + '|'+rowString;
+            result += '\n' ;
+        }
+        result +=  liner + '\n';
+        return result;
+    }
+
 
     string displayScore()
     {
@@ -348,6 +378,23 @@ public:
     {
         if (max >= MAX)
             return true;
+        return false;
+    }
+    bool hasValidMove()
+    {
+        for(int i = 0 ; i < boardSize; i ++)
+            for(int j=0; j < boardSize ; j++)
+                if(values[i][j] == 0)
+                    return true;
+
+        for(int i = 0 ; i < boardSize; i ++)
+            for(int j=0; j < boardSize-1 ; j++)
+                if(values[i][j] == values[i][j+1])
+                    return true;
+        for(int i = 0 ; i < boardSize; i ++)
+            for(int j=0; j < boardSize-1 ; j++)
+                if(values[j][i] == values[j+1][i])
+                    return true;
         return false;
     }
 };
