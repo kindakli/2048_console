@@ -1,11 +1,26 @@
+/**
+ * @file game.cpp
+ * @author  Kindakli
+ * @version 1.0
+ *
+ *
+ * @section DESCRIPTION
+ *
+ * The implementation of game 2048 as a console application.
+ */
+ 
 #include <iostream>
-#include "GameBoard.h"
-
 #include <unistd.h>  
 #include <termios.h>  
 
+#include "GameBoard.h"
+
 using namespace std;
 
+/**
+        * getch reads input char without the need to press enter.
+        *
+*/
 char getch(){
     
     char buf=0;
@@ -28,11 +43,12 @@ char getch(){
     printf("%c\n",buf);
     return buf;
  }
+ 
 
 int main()
 {
     int boardSize = 0;
-    cout << "enter the board size (-1 for default)" << endl;
+    cout << "enter the board size (-1 for default size 4X4)" << endl;
     cin >> boardSize;
     if (boardSize <= 1)
         boardSize = 4;
@@ -49,8 +65,9 @@ int main()
         cout << "Please choose your next move (w= up - d= right - a= left - s= down, q to quit)" << endl;
         //cin >> getchar();
         direction = getch();
-
-        switch (direction) // decide the move based on the ASCII code of the letter
+    
+/// decide the move based on the ASCII code of the letter
+        switch (direction) 
         {
         case 65:
         case 97: //A,a
@@ -69,7 +86,7 @@ int main()
             game.moveDown();
             break;
 
-        case 81:
+        case 81://Q,q
         case 113:
             return 0;
             break;
@@ -79,18 +96,20 @@ int main()
             continue;
         }
     
-
+/// generates a random number after each valid move entered.
         if (game.isValidMove()) {
             game.generateRandomNumber();
         }   else {
             cout << "invalid move, please try again" << endl;
             continue;
         }
+/// win the game when the score reaches 2048.
         if (game.win()) {
             cout << "Congratulation!" << endl;
             cout << game.displayScore();
             break;
         }
+/// lose the game when there is no move available.
         if(!game.hasValidMove())
         {           
             cout <<game.displayMatrix2();
