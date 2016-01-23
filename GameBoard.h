@@ -1,3 +1,14 @@
+/**
+ * @file GameBoard.h
+ * @author  Kindakli
+ * @version 1.0
+ *
+ *
+ * @section DESCRIPTION
+ *
+ * The GameBoard class represents 2048 board game.
+ */
+ 
 #include <sstream>
 #include <iomanip>
 #include <vector>
@@ -9,6 +20,9 @@ using namespace std;
 #define MAX 2048
 
 class GameBoard {
+/**
+* the private data members of the GameBoard class.
+*/
 private:
     //the matrix boardSizeinsion
     int boardSize;
@@ -20,6 +34,7 @@ private:
 
     //the game currnet score
     int score;
+    //represents the current max value on the board
     int max;
 
     void removeMinus()
@@ -31,7 +46,11 @@ private:
     }
 
 public:
-    GameBoard() //, values(boardSize,boardSize)
+/**
+        * Default Constructor that initializes the class members.
+        *
+        */
+    GameBoard() 
     {
         boardSize = 4;
         values.resize(boardSize);
@@ -46,6 +65,12 @@ public:
                 values[i][j] = 0;
         generateRandomNumber();
     }
+
+/**
+        * Normal Constructor that initializes the class members.
+        *
+        * @param boardSize the size of the grid
+        */
 
     GameBoard(int boardSize)
     {
@@ -62,6 +87,12 @@ public:
         generateRandomNumber();
     }
 
+/**
+        * generateRandomNumber generates new random number (2 or 4) at a random cell on the grid.
+        * the value 2 probability is 90%
+        * the value 4 probability is 10%
+        *
+        */
     bool generateRandomNumber()
     {
         srand(time(NULL));
@@ -99,6 +130,10 @@ public:
         return false; // unable to generate
     }
 
+/**
+    * moveRight tilts the board in right direction 
+    *
+    */
     bool moveRight()
     {
         valid = false;
@@ -153,6 +188,11 @@ public:
         return valid;
     }
 
+/**
+    * moveLeft tilts the board in left direction 
+    *
+    *
+    */
     bool moveLeft()
     {
         valid = false;
@@ -209,6 +249,10 @@ public:
         return valid;
     }
 
+/**
+    * moveDown tilts the board in down direction 
+    *
+    */
     bool moveDown()
     {
         valid = false;
@@ -265,6 +309,10 @@ public:
         return valid;
     }
 
+/**
+    * moveUp tilts the board in up direction 
+    *
+    */
     bool moveUp()
     {
         for (int i = 0; i < boardSize; i++) {
@@ -319,6 +367,10 @@ public:
         return valid;
     }
 
+/**
+    * displayMatrix returns the gird values as a string 
+    *
+    */
     string displayMatrix()
     {
         string result("2048:\n");
@@ -331,6 +383,12 @@ public:
         result += '\n';
         return result;
     }
+    
+/**
+    * displayMatrix2 returns the gird values as a string 
+    * improving the display.
+    *
+    */
     string displayMatrix2()
     {
         string result("2048:\n");
@@ -353,33 +411,55 @@ public:
         return result;
     }
 
-
+/**
+    * displayMatrix returns the current user score.
+    *
+    */
     string displayScore()
     {
         return "Your current score : " + to_string(static_cast<long long>(getScore())) + '\n';
     }
+/**
+    * getScore getter of score data memmber.
+    *
+    */
 
     int getScore()
     {
         return score;
     }
 
+/**
+    * getMax getter of max data memmber.
+    * represents the current max value on the board
+    */
     int getMax()
     {
         return max;
     }
 
+/**
+    * isValidMove getter of valid data memmber.
+    */
     bool isValidMove()
     {
         return valid;
     }
 
+/**
+    * win checks if the score reaches the max value (2048).
+    */
     bool win()
     {
         if (max >= MAX)
             return true;
         return false;
     }
+    /**
+    * hasValidMove checks the availability of any valid move remaining.
+    * either merging two numbers
+    * or having an empty cell on the grid
+    */
     bool hasValidMove()
     {
         for(int i = 0 ; i < boardSize; i ++)
