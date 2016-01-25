@@ -477,4 +477,27 @@ public:
                     return true;
         return false;
     }
+    /**
+    * buildBoard creates new entry based on existing grid
+    * @grid input board values 
+    */
+    void buildBoard(vector<vector<int> > grid)
+    {
+        for(int i = 0 ; i < boardSize; i ++)
+            for(int j=0; j < boardSize ; j++)
+                values[i][j] = grid[i][j];
+    }
+
+    /**
+     * compareBoard compare the current grid values with input
+     * @grid input board values 
+    */
+    bool compareBoard(vector<vector<int> > grid)
+    {
+        for(int i = 0 ; i < boardSize; i ++)
+            for(int j=0; j < boardSize ; j++)
+                if(values[i][j] != grid[i][j])
+                 return false;
+        return true;
+     }
 };
