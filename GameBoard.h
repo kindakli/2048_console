@@ -293,7 +293,7 @@ public:
                             values[temp][i] = values[temp][i] * 2;
                             if (values[temp][i] > max)
                                 max = values[temp][i];
-                            score += values[temp][i] * 2;
+                            score += values[temp][i] ;
                             //temporary status to insure titlting one step each round
                             values[temp - 1][i] = -1;
                             valid = true;
@@ -351,7 +351,7 @@ public:
                             values[temp][i] = values[temp][i] * 2;
                             if (values[temp][i] > max)
                                 max = values[temp][i];
-                            score += values[temp][i] * 2;
+                            score += values[temp][i] ;
                             //temporary status to insure titlting one step each round
                             values[temp + 1][i] = -1;
                             valid = true;
